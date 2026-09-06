@@ -7,7 +7,7 @@
 <meta name="description" content="Karllos Design — edição de vídeo, design gráfico e identidade visual. Consultoria criativa autoral, do briefing à entrega.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Figtree:wght@400;500;600;700&display=swap">
 <style>
   :root{
     --color-primary:#8B2CF5;
@@ -22,8 +22,8 @@
     --color-text-muted:#9696A2;
     --color-border:#292932;
     --gradient-main:linear-gradient(135deg,#4C72FF 0%,#8B2CF5 38%,#C449FF 68%,#FF6B8A 100%);
-    --mono:'Space Grotesk',sans-serif;
-    --body:'Inter',sans-serif;
+    --mono:'Bricolage Grotesque',sans-serif;
+    --body:'Figtree',sans-serif;
     --radius-sm:8px; --radius-md:14px; --radius-lg:24px; --radius-xl:32px; --radius-pill:999px;
   }
   *{box-sizing:border-box;}
@@ -75,6 +75,13 @@
   .btn span.label{display:inline-block; transition:transform .2s ease;}
   .btn-primary{background:var(--color-primary); color:#fff; box-shadow:0 20px 60px rgba(0,0,0,.45), 0 0 40px rgba(139,44,245,.2);}
   .btn-primary:hover{box-shadow:0 20px 70px rgba(139,44,245,.35); background:#9a3dfa;}
+  .btn-icon-lead{padding-left:8px;}
+  .btn-icon{
+    width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,.18);
+    display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0;
+    transition:transform .25s cubic-bezier(.16,1,.3,1);
+  }
+  .btn-icon-lead:hover .btn-icon{transform:translateX(3px);}
   .btn-ghost{background:var(--color-surface-2); color:var(--color-text); border-color:var(--color-border);}
   .btn-ghost:hover{border-color:rgba(196,73,255,.45); box-shadow:0 20px 60px rgba(0,0,0,.35);}
 
@@ -215,21 +222,41 @@
   .about-index .bar{width:40px; height:1px; background:var(--color-border);}
   @media (max-width:900px){ .about-index{display:none;} }
 
-  /* ---------- services ---------- */
-  .services-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:28px; margin-top:56px;}
-  @media (max-width:900px){ .services-grid{grid-template-columns:1fr; gap:20px;} }
-  .service-card{
-    background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-lg);
-    padding:36px 30px; transition:transform .25s cubic-bezier(.16,1,.3,1), border-color .25s ease, box-shadow .25s ease;
+  /* ---------- services: Nexomic-style "solution cards" ---------- */
+  .solutions-list{display:flex; flex-direction:column; gap:24px; margin-top:56px;}
+  .solution-card{
+    position:relative; display:block; overflow:hidden; text-decoration:none;
+    background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-xl);
+    padding:56px 64px 64px; transition:transform .3s cubic-bezier(.16,1,.3,1), border-color .3s ease, box-shadow .3s ease;
   }
-  .service-card:hover{transform:translateY(-6px) scale(1.01); border-color:rgba(196,73,255,.4); box-shadow:0 20px 60px rgba(0,0,0,.4);}
-  .service-icon{
-    width:52px; height:52px; border-radius:var(--radius-md); margin-bottom:24px;
-    display:flex; align-items:center; justify-content:center; background:var(--gradient-main);
+  .solution-card:hover{transform:translateY(-4px); border-color:rgba(196,73,255,.4); box-shadow:0 30px 80px rgba(0,0,0,.5);}
+  @media (max-width:640px){ .solution-card{padding:36px 28px 48px;} }
+  .solution-tab{
+    position:absolute; top:0; left:32px; padding:8px 18px 10px; font-family:var(--body); font-size:12px; font-weight:600;
+    letter-spacing:.04em; text-transform:uppercase; color:var(--color-text-muted);
+    background:var(--color-surface-2); border:1px solid var(--color-border); border-top:none;
+    border-radius:0 0 var(--radius-md) var(--radius-md);
   }
-  .service-icon svg{width:24px; height:24px; color:#fff;}
-  .service-card h3{font-size:21px; margin-bottom:12px; color:var(--color-text);}
-  .service-card p{color:var(--color-text-muted); font-size:15px; line-height:1.65;}
+  .solution-dots{
+    position:absolute; top:0; right:0; width:46%; height:100%; pointer-events:none; opacity:.5;
+    background-image:radial-gradient(circle, rgba(196,73,255,.35) 1.4px, transparent 1.4px);
+    background-size:16px 16px;
+    -webkit-mask-image:radial-gradient(ellipse 90% 90% at 100% 0%, #000 40%, transparent 78%);
+    mask-image:radial-gradient(ellipse 90% 90% at 100% 0%, #000 40%, transparent 78%);
+  }
+  @media (max-width:640px){ .solution-dots{display:none;} }
+  .solution-card h3{
+    position:relative; z-index:1; font-size:clamp(22px,2.6vw,30px); line-height:1.25; letter-spacing:-.01em;
+    max-width:20ch; color:var(--color-text); margin-bottom:16px; font-weight:500;
+  }
+  .solution-card h3 .hl{color:var(--color-primary-light);}
+  .solution-card p{position:relative; z-index:1; color:var(--color-text-muted); font-size:15px; max-width:48ch;}
+  .solution-arrow{
+    position:absolute; right:32px; bottom:28px; width:44px; height:44px; border-radius:50%;
+    background:var(--color-primary); color:#fff; display:flex; align-items:center; justify-content:center;
+    font-size:18px; transition:transform .25s cubic-bezier(.16,1,.3,1), background .25s ease;
+  }
+  .solution-card:hover .solution-arrow{transform:rotate(45deg); background:#9a3dfa;}
 
   /* ---------- process ---------- */
   .process-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:24px; margin-top:56px;}
@@ -237,15 +264,20 @@
   @media (max-width:640px){ .process-grid{grid-template-columns:1fr;} }
   .process-card{
     background:var(--color-surface); border:1px solid var(--color-border); border-radius:var(--radius-lg);
-    padding:30px 26px; position:relative; transition:border-color .25s ease, transform .25s ease;
+    padding:30px 26px; position:relative; overflow:hidden; transition:border-color .25s ease, transform .25s ease;
   }
   .process-card:hover{border-color:rgba(76,114,255,.4); transform:translateY(-4px);}
+  .process-card::before{
+    content:attr(data-num); position:absolute; right:-6px; bottom:-30px; z-index:0; pointer-events:none;
+    font-family:var(--mono); font-size:110px; font-weight:700; line-height:1; color:transparent;
+    -webkit-text-stroke:1px var(--color-border);
+  }
   .process-num{
-    font-family:var(--mono); font-size:13px; font-weight:700; color:var(--color-accent);
+    position:relative; z-index:1; font-family:var(--mono); font-size:13px; font-weight:700; color:var(--color-accent);
     letter-spacing:.05em; margin-bottom:20px; display:block;
   }
-  .process-card h3{font-size:18px; margin-bottom:10px;}
-  .process-card p{font-size:14px; color:var(--color-text-muted); line-height:1.6;}
+  .process-card h3{position:relative; z-index:1; font-size:18px; margin-bottom:10px;}
+  .process-card p{position:relative; z-index:1; font-size:14px; color:var(--color-text-muted); line-height:1.6;}
 
   /* ---------- work / social proof ---------- */
   .filters{display:flex; gap:10px; flex-wrap:wrap; margin:40px 0 40px;}
@@ -392,7 +424,7 @@
         </h1>
         <p class="lede hero-anim" data-anim="lede">Edição de vídeo, design gráfico e identidade visual. Um estúdio de uma pessoa só, com processo que não deixa nada ao acaso.</p>
         <div class="hero-actions hero-anim" data-anim="cta">
-          <a class="btn btn-primary" href="#trabalhos"><span class="label">Ver trabalhos</span><span class="arrow">→</span></a>
+          <a class="btn btn-primary btn-icon-lead" href="#trabalhos"><span class="btn-icon">→</span><span class="label">Ver trabalhos</span></a>
           <a class="btn btn-ghost" href="#contato"><span class="label">Falar no WhatsApp</span></a>
         </div>
       </div>
@@ -429,8 +461,8 @@
       <div class="about-text">
         <p class="eyebrow reveal">Quem sou eu</p>
         <h2 class="reveal">Um estúdio de uma pessoa. Um processo que não deixa nada ao acaso.</h2>
-        <p class="reveal">Sou o Karllos. Edito vídeo, desenho identidade visual e construo a consistência que falta entre a tela e o feed. Todo projeto passa pelo mesmo processo, do roteiro ao arquivo final.</p>
-        <p class="reveal"><strong>Menos enfeite, mais decisão.</strong> Prefiro um corte certeiro e uma paleta de duas cores bem aplicada a um efeito chamativo sem função.</p>
+        <p class="reveal scrub-text">Sou o Karllos. Edito vídeo, desenho identidade visual e construo a consistência que falta entre a tela e o feed. Todo projeto passa pelo mesmo processo, do roteiro ao arquivo final.</p>
+        <p class="reveal scrub-text">Menos enfeite, mais decisão. Prefiro um corte certeiro e uma paleta de duas cores bem aplicada a um efeito chamativo sem função.</p>
       </div>
     </div>
   </section>
@@ -438,23 +470,29 @@
   <section id="servicos">
     <div class="wrap">
       <p class="eyebrow reveal">O que eu entrego</p>
-      <h2 class="reveal" style="font-size:clamp(28px,4vw,44px); max-width:14ch;">Serviços pensados pra resolver, não só decorar.</h2>
-      <div class="services-grid">
-        <div class="service-card reveal">
-          <div class="service-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
-          <h3>Edição de Vídeo</h3>
-          <p>Corte, color e motion para bastidores, procedimentos, reels e vídeos institucionais — ritmo que prende atenção do primeiro segundo.</p>
-        </div>
-        <div class="service-card reveal">
-          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/></svg></div>
-          <h3>Design Gráfico</h3>
-          <p>Artes para redes sociais, peças de campanha e material impresso, com hierarquia clara e consistência visual.</p>
-        </div>
-        <div class="service-card reveal">
-          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M12 3 21 8.5V15.5L12 21 3 15.5V8.5L12 3Z"/><path d="M12 3V21M3 8.5 21 15.5M21 8.5 3 15.5"/></svg></div>
-          <h3>Identidade Visual</h3>
-          <p>Logotipo, paleta e aplicações para marcas que precisam de coerência entre todos os pontos de contato.</p>
-        </div>
+      <h2 class="reveal" style="font-size:clamp(28px,4vw,44px); max-width:16ch;">Serviços pensados pra resolver, não só decorar.</h2>
+      <div class="solutions-list">
+        <a class="solution-card reveal" href="#trabalhos" data-filter-to="video">
+          <span class="solution-tab">Vídeo</span>
+          <div class="solution-dots" aria-hidden="true"></div>
+          <h3>Edição de vídeo com <span class="hl">ritmo</span> que prende atenção do primeiro segundo</h3>
+          <p>Corte, color e motion para bastidores, procedimentos, reels e vídeos institucionais.</p>
+          <span class="solution-arrow">↗</span>
+        </a>
+        <a class="solution-card reveal" href="#trabalhos" data-filter-to="design">
+          <span class="solution-tab">Design</span>
+          <div class="solution-dots" aria-hidden="true"></div>
+          <h3>Artes gráficas com <span class="hl">hierarquia clara</span> e consistência visual</h3>
+          <p>Peças para redes sociais, campanhas e material impresso.</p>
+          <span class="solution-arrow">↗</span>
+        </a>
+        <a class="solution-card reveal" href="#trabalhos" data-filter-to="marca">
+          <span class="solution-tab">Identidade</span>
+          <div class="solution-dots" aria-hidden="true"></div>
+          <h3>Identidade visual <span class="hl">coerente</span> em todos os pontos de contato</h3>
+          <p>Logotipo, paleta e aplicações para marcas que precisam de consistência.</p>
+          <span class="solution-arrow">↗</span>
+        </a>
       </div>
     </div>
   </section>
@@ -464,10 +502,10 @@
       <p class="eyebrow reveal">Como eu trabalho</p>
       <h2 class="reveal" style="font-size:clamp(28px,4vw,44px);">Do briefing à entrega. Sem ruído no meio.</h2>
       <div class="process-grid">
-        <div class="process-card reveal"><span class="process-num">01</span><h3>Briefing & referências</h3><p>Entendo o objetivo, o público e reúno referências visuais antes de abrir qualquer arquivo.</p></div>
-        <div class="process-card reveal"><span class="process-num">02</span><h3>Roteiro & direção de arte</h3><p>Defino estrutura de corte ou conceito visual e alinho com você antes da produção.</p></div>
-        <div class="process-card reveal"><span class="process-num">03</span><h3>Produção</h3><p>Edição, color, motion ou peças gráficas. Com atualizações parciais no caminho.</p></div>
-        <div class="process-card reveal"><span class="process-num">04</span><h3>Entrega & ajustes</h3><p>Arquivos finais nos formatos combinados, com uma rodada de ajustes inclusa.</p></div>
+        <div class="process-card reveal" data-num="01"><span class="process-num">01</span><h3>Briefing & referências</h3><p>Entendo o objetivo, o público e reúno referências visuais antes de abrir qualquer arquivo.</p></div>
+        <div class="process-card reveal" data-num="02"><span class="process-num">02</span><h3>Roteiro & direção de arte</h3><p>Defino estrutura de corte ou conceito visual e alinho com você antes da produção.</p></div>
+        <div class="process-card reveal" data-num="03"><span class="process-num">03</span><h3>Produção</h3><p>Edição, color, motion ou peças gráficas. Com atualizações parciais no caminho.</p></div>
+        <div class="process-card reveal" data-num="04"><span class="process-num">04</span><h3>Entrega & ajustes</h3><p>Arquivos finais nos formatos combinados, com uma rodada de ajustes inclusa.</p></div>
       </div>
     </div>
   </section>
@@ -604,6 +642,24 @@
     setTimeout(forceVisible, 3000);
   })();
 
+  /* ---------- scroll-scrub word reveal (About), Nexomic-style ---------- */
+  (function(){
+    var paras = document.querySelectorAll('.scrub-text');
+    if(!paras.length) return;
+    paras.forEach(function(p){
+      var text = p.textContent;
+      p.innerHTML = text.split(' ').map(function(w){ return '<span class="word">'+w+'</span>'; }).join(' ');
+    });
+    if(!hasGsap || !window.ScrollTrigger || reduceMotion) return;
+    paras.forEach(function(p){
+      var words = p.querySelectorAll('.word');
+      gsap.fromTo(words, {color:'#9696A2'}, {
+        color:'#F7F7FA', stagger:.05, ease:'none',
+        scrollTrigger:{trigger:p, start:'top 85%', end:'bottom 65%', scrub:.3}
+      });
+    });
+  })();
+
   /* ---------- scroll reveal (stagger) ---------- */
   (function(){
     var groups = {};
@@ -724,15 +780,17 @@
   /* ---------- work filters ---------- */
   (function(){
     var buttons = document.querySelectorAll('.filter-btn');
-    buttons.forEach(function(btn){
-      btn.addEventListener('click', function(){
-        buttons.forEach(function(b){ b.setAttribute('aria-pressed','false'); });
-        btn.setAttribute('aria-pressed','true');
-        var f = btn.dataset.filter;
-        document.querySelectorAll('#workGrid .tilt-card').forEach(function(card){
-          card.hidden = !(f === 'todos' || card.dataset.cat === f);
-        });
+    function applyFilter(f){
+      buttons.forEach(function(b){ b.setAttribute('aria-pressed', String(b.dataset.filter === f)); });
+      document.querySelectorAll('#workGrid .tilt-card').forEach(function(card){
+        card.hidden = !(f === 'todos' || card.dataset.cat === f);
       });
+    }
+    buttons.forEach(function(btn){
+      btn.addEventListener('click', function(){ applyFilter(btn.dataset.filter); });
+    });
+    document.querySelectorAll('[data-filter-to]').forEach(function(link){
+      link.addEventListener('click', function(){ applyFilter(link.dataset.filterTo); });
     });
   })();
 
