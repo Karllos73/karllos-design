@@ -66,13 +66,14 @@
   .btn{
     font-family:var(--body); font-size:14px; font-weight:600; letter-spacing:.02em;
     padding:16px 32px; border-radius:var(--radius-pill); text-decoration:none; display:inline-flex; align-items:center; gap:10px;
-    border:1px solid transparent; cursor:pointer; transition:transform .2s ease, box-shadow .25s ease, background .25s ease;
+    border:1px solid transparent; cursor:pointer;
+    transition:transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s cubic-bezier(.16,1,.3,1), background .3s ease;
     position:relative; overflow:hidden;
   }
-  .btn span.arrow{transition:transform .2s ease; display:inline-block;}
+  .btn span.arrow{transition:transform .35s cubic-bezier(.16,1,.3,1); display:inline-block;}
   .btn:hover span.arrow{transform:translateX(4px);}
   .btn:hover span.label{transform:translateX(2px);}
-  .btn span.label{display:inline-block; transition:transform .2s ease;}
+  .btn span.label{display:inline-block; transition:transform .35s cubic-bezier(.16,1,.3,1);}
   .btn-primary{background:var(--color-primary); color:#fff; box-shadow:0 20px 60px rgba(0,0,0,.45), 0 0 40px rgba(139,44,245,.2);}
   .btn-primary:hover{box-shadow:0 20px 70px rgba(139,44,245,.35); background:#9a3dfa;}
   .btn-icon-lead{padding-left:8px;}
@@ -84,7 +85,7 @@
   .btn-icon-lead:hover .btn-icon{transform:translateX(3px);}
   .btn-ghost{background:var(--color-surface-2); color:var(--color-text); border-color:var(--color-border);}
   .btn-ghost:hover{border-color:rgba(196,73,255,.45); box-shadow:0 20px 60px rgba(0,0,0,.35);}
-  .btn:active{transform:scale(.96);}
+  .btn:active{transform:scale(.96); transition-duration:.1s;}
 
   /* ---------- nav ---------- */
   header{position:fixed; top:16px; left:0; right:0; z-index:60;}
@@ -628,12 +629,26 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js" integrity="sha512-oJ8QbaQThQoJZ7oEv+29jfPM6CcP+zUxh3PKJs1vyOhx0UraUrE7PQgeItu3dOuCJyrzWpoYMsVjkkPEBzbUqw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js" integrity="sha512-OaIE7ud4P04EhnBuhEcm0wQSceIxbi2pV03oBLS/+F6ampfxsnxcIxOp7H2eF9G7N0kEht0VAzOLG+dTLSo17Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js" integrity="sha256-Uxlcl5fnznv51/qSQrCCCeV/Rt5MnawSamSU+ngOM0Y=" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
 (function(){
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var isDesktop = window.matchMedia('(min-width:768px)').matches;
   var hasGsap = typeof gsap !== 'undefined';
   if(hasGsap && window.ScrollTrigger){ gsap.registerPlugin(ScrollTrigger); }
+
+  /* ---------- smooth scroll (Lenis), synced to GSAP's ticker ---------- */
+  (function(){
+    if(typeof Lenis === 'undefined' || reduceMotion || !isDesktop) return;
+    var lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+    lenis.on('scroll', function(){ if(window.ScrollTrigger) ScrollTrigger.update(); });
+    if(hasGsap){
+      gsap.ticker.add(function(time){ lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      requestAnimationFrame(function raf(time){ lenis.raf(time); requestAnimationFrame(raf); });
+    }
+  })();
 
   var SUPABASE_URL = 'https://mctkvfpuljgqfajddhdn.supabase.co';
   var SUPABASE_ANON_KEY = 'sb_publishable_kOxdA64DlBI_9CBnDQqeBw_4dwp6Tn5';
@@ -657,19 +672,23 @@
     gsap.set('[data-anim="cta"]', {opacity:0, scale:.96});
     gsap.set('#heroBlob', {opacity:0});
 
-    var tl = gsap.timeline({defaults:{ease:'power3.out'}, onComplete:function(){
+    var tl = gsap.timeline({defaults:{ease:'expo.out'}, onComplete:function(){
       textEls.forEach(function(el){ el.style.transform = 'none'; });
     }});
-    tl.to('[data-anim="label"]', {opacity:1, y:0, duration:.5}, 0)
-      .to('.hero-word', {yPercent:0, duration:.8, stagger:.08, ease:'power4.out'}, .15)
-      .to('[data-anim="lede"]', {opacity:1, y:0, duration:.6}, .55)
-      .to('[data-anim="cta"]', {opacity:1, scale:1, duration:.5}, .75)
-      .to('#heroBlob', {opacity:1, duration:1, ease:'power2.out'}, .5);
+    tl.to('[data-anim="label"]', {opacity:1, y:0, duration:.7}, 0)
+      .to('.hero-word', {yPercent:0, duration:1.1, stagger:.1, ease:'expo.out'}, .2)
+      .to('[data-anim="lede"]', {opacity:1, y:0, duration:.8}, .75)
+      .to('[data-anim="cta"]', {opacity:1, scale:1, duration:.7, ease:'back.out(1.6)'}, 1)
+      .to('#heroBlob', {opacity:1, duration:1.4, ease:'power2.out'}, .6);
 
     setTimeout(forceVisible, 3000);
   })();
 
-  /* ---------- scroll-scrub word reveal (About), Nexomic-style ---------- */
+  /* ---------- scroll-scrub word reveal (About), Nexomic-style ----------
+     The photo pins in place while the paragraphs scrub-reveal beside it,
+     giving the words room to read instead of flashing past in the
+     paragraph's own (short) natural height. Pin is desktop-only — the
+     mobile layout stacks photo above text, where pinning makes no sense. */
   (function(){
     var paras = document.querySelectorAll('.scrub-text');
     if(!paras.length) return;
@@ -678,12 +697,16 @@
       p.innerHTML = text.split(' ').map(function(w){ return '<span class="word">'+w+'</span>'; }).join(' ');
     });
     if(!hasGsap || !window.ScrollTrigger || reduceMotion) return;
-    paras.forEach(function(p){
+
+    var aboutText = document.querySelector('.about-text');
+    var aboutVisual = document.querySelector('.about-visual');
+    var stVars = { trigger: aboutText, start:'top 20%', end:'bottom 75%', scrub:.4 };
+    if(isDesktop && aboutVisual){ stVars.pin = aboutVisual; stVars.pinSpacing = true; }
+
+    var tl = gsap.timeline({ scrollTrigger: stVars });
+    paras.forEach(function(p, i){
       var words = p.querySelectorAll('.word');
-      gsap.fromTo(words, {color:'#9696A2'}, {
-        color:'#F7F7FA', stagger:.05, ease:'none',
-        scrollTrigger:{trigger:p, start:'top 85%', end:'bottom 65%', scrub:.3}
-      });
+      tl.fromTo(words, {color:'#9696A2'}, {color:'#F7F7FA', stagger:.05, ease:'none'}, i === 0 ? 0 : '>');
     });
   })();
 
@@ -787,9 +810,9 @@
         var r = btn.getBoundingClientRect();
         var mx = e.clientX - (r.left + r.width/2);
         var my = e.clientY - (r.top + r.height/2);
-        gsap.to(btn, {x: mx*.25, y: my*.35, duration:.3, ease:'power2.out'});
+        gsap.to(btn, {x: mx*.3, y: my*.4, duration:.6, ease:'power3.out'});
       });
-      btn.addEventListener('mouseleave', function(){ gsap.to(btn, {x:0, y:0, scale:1, duration:.4, ease:'elastic.out(1,.4)'}); });
+      btn.addEventListener('mouseleave', function(){ gsap.to(btn, {x:0, y:0, scale:1, duration:.6, ease:'elastic.out(1,.35)'}); });
       btn.addEventListener('mousedown', function(){ gsap.to(btn, {scale:.96, duration:.15}); });
       btn.addEventListener('mouseup', function(){ gsap.to(btn, {scale:1, duration:.2}); });
     });
