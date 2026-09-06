@@ -147,7 +147,7 @@
     margin:0 0 28px;
   }
   .hero h1 .line{display:block; overflow:hidden;}
-  .hero h1 .line span{display:inline-block; transform:translateY(115%); will-change:transform;}
+  .hero h1 .line span{display:inline-block; will-change:transform;}
   .hero p.lede{font-size:18px; line-height:1.6; color:var(--color-text-muted); max-width:46ch; margin-bottom:40px;}
   .hero-actions{display:flex; gap:16px; flex-wrap:wrap;}
   .hero-foot{
@@ -562,19 +562,35 @@
   var SUPABASE_URL = 'https://mctkvfpuljgqfajddhdn.supabase.co';
   var SUPABASE_ANON_KEY = 'sb_publishable_kOxdA64DlBI_9CBnDQqeBw_4dwp6Tn5';
 
-  /* ---------- hero entrance sequence ---------- */
+  /* ---------- hero entrance sequence ----------
+     Content is visible by default in CSS (no "hidden until JS reveals it"
+     pattern) — GSAP only enhances with a from-state if it's available and
+     the user hasn't asked for reduced motion. A hard fallback timeout
+     guarantees everything is visible even if a tween misbehaves. */
   (function(){
-    if(!hasGsap){
-      document.querySelectorAll('.hero-word, .hero-anim').forEach(function(el){ el.style.opacity = 1; el.style.transform = 'none'; });
-      return;
+    var textEls = document.querySelectorAll('.hero-word, .hero-anim');
+    var blob = document.getElementById('heroBlob');
+    function forceVisible(){
+      textEls.forEach(function(el){ el.style.opacity = 1; el.style.transform = 'none'; });
+      if(blob){ blob.style.opacity = 1; }
     }
-    var tl = gsap.timeline({defaults:{ease:'power3.out'}});
-    tl.to('[data-anim="label"]', {opacity:1, y:0, duration:.5}, 0)
-      .fromTo('.hero-word', {yPercent:115}, {yPercent:0, duration:.8, stagger:.08, ease:'power4.out'}, .15)
-      .to('[data-anim="lede"]', {opacity:1, y:0, duration:.6}, .55)
-      .fromTo('[data-anim="cta"]', {opacity:0, scale:.96}, {opacity:1, scale:1, duration:.5}, .75)
-      .fromTo('#heroBlob', {opacity:0, scale:.88, rotate:-4}, {opacity:1, scale:1, rotate:0, duration:1, ease:'power2.out'}, .5);
+    if(!hasGsap || reduceMotion){ forceVisible(); return; }
+
     gsap.set('[data-anim="label"], [data-anim="lede"]', {opacity:0, y:15});
+    gsap.set('.hero-word', {yPercent:115});
+    gsap.set('[data-anim="cta"]', {opacity:0, scale:.96});
+    gsap.set('#heroBlob', {opacity:0, scale:.88, rotation:-4});
+
+    var tl = gsap.timeline({defaults:{ease:'power3.out'}, onComplete:function(){
+      textEls.forEach(function(el){ el.style.transform = 'none'; });
+    }});
+    tl.to('[data-anim="label"]', {opacity:1, y:0, duration:.5}, 0)
+      .to('.hero-word', {yPercent:0, duration:.8, stagger:.08, ease:'power4.out'}, .15)
+      .to('[data-anim="lede"]', {opacity:1, y:0, duration:.6}, .55)
+      .to('[data-anim="cta"]', {opacity:1, scale:1, duration:.5}, .75)
+      .to('#heroBlob', {opacity:1, scale:1, rotation:0, duration:1, ease:'power2.out'}, .5);
+
+    setTimeout(forceVisible, 3000);
   })();
 
   /* ---------- scroll reveal (stagger) ---------- */
