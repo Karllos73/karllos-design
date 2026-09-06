@@ -750,13 +750,16 @@
     gsap.to(blob, {scale:1.045, duration:6, repeat:-1, yoyo:true, ease:'sine.inOut'});
 
     var shapes = [
-      '60% 40% 55% 45% / 45% 60% 40% 55%',
-      '45% 55% 60% 40% / 55% 45% 55% 45%',
-      '55% 45% 40% 60% / 40% 55% 45% 60%',
-      '60% 40% 55% 45% / 45% 60% 40% 55%'
+      {borderTopLeftRadius:'60% 45%', borderTopRightRadius:'40% 60%', borderBottomRightRadius:'55% 40%', borderBottomLeftRadius:'45% 55%'},
+      {borderTopLeftRadius:'45% 55%', borderTopRightRadius:'55% 45%', borderBottomRightRadius:'60% 55%', borderBottomLeftRadius:'40% 45%'},
+      {borderTopLeftRadius:'55% 40%', borderTopRightRadius:'45% 55%', borderBottomRightRadius:'40% 45%', borderBottomLeftRadius:'60% 60%'},
+      {borderTopLeftRadius:'60% 45%', borderTopRightRadius:'40% 60%', borderBottomRightRadius:'55% 40%', borderBottomLeftRadius:'45% 55%'}
     ];
     var morphTl = gsap.timeline({repeat:-1});
-    shapes.forEach(function(shape){ morphTl.to(blob, {borderRadius:shape, duration:9, ease:'sine.inOut'}); });
+    shapes.forEach(function(shape){
+      var vars = Object.assign({duration:9, ease:'sine.inOut'}, shape);
+      morphTl.to(blob, vars);
+    });
 
     if(isDesktop){
       var hero = document.getElementById('hero-section');
