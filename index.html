@@ -700,7 +700,7 @@
 
     var aboutText = document.querySelector('.about-text');
     var aboutVisual = document.querySelector('.about-visual');
-    var stVars = { trigger: aboutText, start:'top 20%', end:'bottom 75%', scrub:.4 };
+    var stVars = { trigger: aboutText, start:'top 20%', end:'+=' + Math.round(window.innerHeight * 1.4), scrub:.4 };
     if(isDesktop && aboutVisual){ stVars.pin = aboutVisual; stVars.pinSpacing = true; }
 
     var tl = gsap.timeline({ scrollTrigger: stVars });
