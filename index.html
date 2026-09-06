@@ -183,7 +183,8 @@
   .reveal.in-view{opacity:1; transform:translateY(0);}
 
   /* ---------- tech orbs: purple wireframe-sphere decorations, parallax + rotate on scroll ---------- */
-  .tech-orb{position:absolute; pointer-events:none; z-index:0; height:auto;}
+  .bg-orbs{position:fixed; inset:0; z-index:-1; pointer-events:none;}
+  .tech-orb{position:absolute; pointer-events:none; height:auto;}
 
   /* ---------- about ---------- */
   .about{position:relative;}
@@ -308,6 +309,46 @@
 </head>
 <body>
 
+<div class="bg-orbs" aria-hidden="true">
+  <svg class="tech-orb" viewBox="0 0 100 100" data-speed="0.05" data-rot="-3" style="width:280px; top:-6%; left:-10%;">
+    <circle cx="50" cy="50" r="46" stroke="#7c3aed" stroke-width="1" fill="none" opacity=".4"/>
+    <ellipse cx="50" cy="50" rx="46" ry="16" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".32"/>
+    <ellipse cx="50" cy="50" rx="16" ry="46" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".32"/>
+  </svg>
+  <svg class="tech-orb" viewBox="0 0 100 100" data-speed="0.13" data-rot="6" style="width:150px; top:10%; right:6%;">
+    <circle cx="50" cy="50" r="46" stroke="#7c3aed" stroke-width="1" fill="none" opacity=".4"/>
+    <ellipse cx="50" cy="50" rx="46" ry="16" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".32"/>
+    <ellipse cx="50" cy="50" rx="16" ry="46" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".32"/>
+    <ellipse cx="50" cy="50" rx="46" ry="30" stroke="#d8c8ff" stroke-width=".6" fill="none" opacity=".2" transform="rotate(50 50 50)"/>
+  </svg>
+  <svg class="tech-orb" viewBox="0 0 100 100" data-speed="0.08" data-rot="-5" style="width:210px; top:38%; left:62%;">
+    <circle cx="50" cy="50" r="46" stroke="#7c3aed" stroke-width="1" fill="none" opacity=".35"/>
+    <ellipse cx="50" cy="50" rx="46" ry="16" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".28"/>
+    <ellipse cx="50" cy="50" rx="16" ry="46" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".28"/>
+  </svg>
+  <svg class="tech-orb" viewBox="0 0 100 100" data-speed="0.17" data-rot="9" style="width:120px; top:58%; left:8%;">
+    <circle cx="50" cy="50" r="46" stroke="#7c3aed" stroke-width="1" fill="none" opacity=".4"/>
+    <ellipse cx="50" cy="50" rx="46" ry="16" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".32"/>
+    <ellipse cx="50" cy="50" rx="16" ry="46" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".32"/>
+  </svg>
+  <svg class="tech-orb" viewBox="0 0 100 100" data-speed="0.06" data-rot="-4" style="width:240px; top:78%; right:-8%;">
+    <circle cx="50" cy="50" r="46" stroke="#7c3aed" stroke-width="1" fill="none" opacity=".38"/>
+    <ellipse cx="50" cy="50" rx="46" ry="16" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".3"/>
+    <ellipse cx="50" cy="50" rx="16" ry="46" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".3"/>
+    <ellipse cx="50" cy="50" rx="30" ry="46" stroke="#d8c8ff" stroke-width=".6" fill="none" opacity=".2" transform="rotate(-50 50 50)"/>
+  </svg>
+  <svg class="tech-orb" viewBox="0 0 100 100" data-speed="0.15" data-rot="7" style="width:130px; top:94%; left:38%;">
+    <circle cx="50" cy="50" r="46" stroke="#7c3aed" stroke-width="1" fill="none" opacity=".38"/>
+    <ellipse cx="50" cy="50" rx="46" ry="16" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".3"/>
+    <ellipse cx="50" cy="50" rx="16" ry="46" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".3"/>
+  </svg>
+  <svg class="tech-orb" viewBox="0 0 100 100" data-speed="0.10" data-rot="4" style="width:190px; top:22%; left:22%;">
+    <circle cx="50" cy="50" r="46" stroke="#7c3aed" stroke-width="1" fill="none" opacity=".3"/>
+    <ellipse cx="50" cy="50" rx="46" ry="16" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".24"/>
+    <ellipse cx="50" cy="50" rx="16" ry="46" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".24"/>
+  </svg>
+</div>
+
 <header>
   <nav class="wrap">
     <a class="brandmark" href="#top">
@@ -353,13 +394,6 @@
   </section>
 
   <section class="about" id="sobre">
-    <svg class="tech-orb" viewBox="0 0 100 100" aria-hidden="true" data-speed="0.10" data-rot="-6" style="width:240px; top:-60px; right:-70px;">
-      <circle cx="50" cy="50" r="46" stroke="#7c3aed" stroke-width="1" fill="none" opacity=".5"/>
-      <ellipse cx="50" cy="50" rx="46" ry="16" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".4"/>
-      <ellipse cx="50" cy="50" rx="16" ry="46" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".4"/>
-      <ellipse cx="50" cy="50" rx="46" ry="30" stroke="#d8c8ff" stroke-width=".6" fill="none" opacity=".28" transform="rotate(50 50 50)"/>
-      <ellipse cx="50" cy="50" rx="30" ry="46" stroke="#d8c8ff" stroke-width=".6" fill="none" opacity=".28" transform="rotate(-50 50 50)"/>
-    </svg>
     <div class="wrap">
       <div class="avatar-tilt">
         <div class="avatar" id="avatarTilt"><img src="assets/avatar.jpg" alt="Foto de Karllos, autor do estúdio Karllos Design" loading="lazy"></div>
@@ -374,17 +408,6 @@
   </section>
 
   <section class="work" id="trabalhos">
-    <svg class="tech-orb" viewBox="0 0 100 100" aria-hidden="true" data-speed="0.06" data-rot="4" style="width:180px; bottom:-40px; left:-50px;">
-      <circle cx="50" cy="50" r="46" stroke="#7c3aed" stroke-width="1" fill="none" opacity=".45"/>
-      <ellipse cx="50" cy="50" rx="46" ry="16" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".35"/>
-      <ellipse cx="50" cy="50" rx="16" ry="46" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".35"/>
-      <ellipse cx="50" cy="50" rx="46" ry="30" stroke="#d8c8ff" stroke-width=".6" fill="none" opacity=".24" transform="rotate(50 50 50)"/>
-    </svg>
-    <svg class="tech-orb" viewBox="0 0 100 100" aria-hidden="true" data-speed="0.14" data-rot="-8" style="width:110px; top:40px; right:-30px;">
-      <circle cx="50" cy="50" r="46" stroke="#7c3aed" stroke-width="1" fill="none" opacity=".5"/>
-      <ellipse cx="50" cy="50" rx="46" ry="16" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".4"/>
-      <ellipse cx="50" cy="50" rx="16" ry="46" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".4"/>
-    </svg>
     <div class="wrap">
       <div class="section-head reveal">
         <p class="eyebrow"><span class="dot"></span>Trabalhos</p>
@@ -404,12 +427,6 @@
   </section>
 
   <section class="process" id="processo">
-    <svg class="tech-orb" viewBox="0 0 100 100" aria-hidden="true" data-speed="0.09" data-rot="7" style="width:200px; top:20%; right:-60px;">
-      <circle cx="50" cy="50" r="46" stroke="#7c3aed" stroke-width="1" fill="none" opacity=".45"/>
-      <ellipse cx="50" cy="50" rx="46" ry="16" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".38"/>
-      <ellipse cx="50" cy="50" rx="16" ry="46" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".38"/>
-      <ellipse cx="50" cy="50" rx="30" ry="46" stroke="#d8c8ff" stroke-width=".6" fill="none" opacity=".26" transform="rotate(-50 50 50)"/>
-    </svg>
     <div class="wrap">
       <div class="section-head reveal">
         <p class="eyebrow"><span class="dot"></span>Processo</p>
