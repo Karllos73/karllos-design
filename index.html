@@ -182,10 +182,6 @@
   .reveal{opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s cubic-bezier(.16,1,.3,1);}
   .reveal.in-view{opacity:1; transform:translateY(0);}
 
-  /* ---------- tech orbs: purple wireframe-sphere decorations, parallax + rotate on scroll ---------- */
-  .bg-orbs{position:fixed; inset:0; z-index:-1; pointer-events:none;}
-  .tech-orb{position:absolute; pointer-events:none; height:auto;}
-
   /* ---------- about ---------- */
   .about{position:relative;}
   .about .wrap{display:grid; grid-template-columns:.85fr 1.15fr; gap:72px; align-items:center;}
@@ -308,29 +304,6 @@
 </style>
 </head>
 <body>
-
-<div class="bg-orbs" aria-hidden="true">
-  <svg class="tech-orb" viewBox="0 0 100 100" data-speed="0.025" data-rot="-1.2" style="width:170px; top:-6%; left:-10%;">
-    <circle cx="50" cy="50" r="46" stroke="#7c3aed" stroke-width="1" fill="none" opacity=".26"/>
-    <ellipse cx="50" cy="50" rx="46" ry="16" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".2"/>
-    <ellipse cx="50" cy="50" rx="16" ry="46" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".2"/>
-  </svg>
-  <svg class="tech-orb" viewBox="0 0 100 100" data-speed="0.04" data-rot="-2" style="width:140px; top:38%; left:62%;">
-    <circle cx="50" cy="50" r="46" stroke="#7c3aed" stroke-width="1" fill="none" opacity=".22"/>
-    <ellipse cx="50" cy="50" rx="46" ry="16" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".16"/>
-    <ellipse cx="50" cy="50" rx="16" ry="46" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".16"/>
-  </svg>
-  <svg class="tech-orb" viewBox="0 0 100 100" data-speed="0.03" data-rot="-1.6" style="width:160px; top:78%; right:-8%;">
-    <circle cx="50" cy="50" r="46" stroke="#7c3aed" stroke-width="1" fill="none" opacity=".24"/>
-    <ellipse cx="50" cy="50" rx="46" ry="16" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".18"/>
-    <ellipse cx="50" cy="50" rx="16" ry="46" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".18"/>
-  </svg>
-  <svg class="tech-orb" viewBox="0 0 100 100" data-speed="0.05" data-rot="1.4" style="width:130px; top:22%; left:22%;">
-    <circle cx="50" cy="50" r="46" stroke="#7c3aed" stroke-width="1" fill="none" opacity=".18"/>
-    <ellipse cx="50" cy="50" rx="46" ry="16" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".14"/>
-    <ellipse cx="50" cy="50" rx="16" ry="46" stroke="#9b6bff" stroke-width="1" fill="none" opacity=".14"/>
-  </svg>
-</div>
 
 <header>
   <nav class="wrap">
@@ -673,28 +646,6 @@
         note.textContent = 'Não consegui enviar agora — me chama no WhatsApp.';
       });
     });
-  })();
-
-  /* tech orbs: fixed in place, only rotating continuously (no scroll movement) */
-  (function(){
-    var orbs = Array.prototype.slice.call(document.querySelectorAll('.tech-orb'));
-    if(!orbs.length) return;
-    if(reduceMotion) return;
-    orbs.forEach(function(el, i){
-      el._rot = parseFloat(el.dataset.rot) || (5 + i*2);
-      el._angle = (i*47) % 360;
-    });
-    var last = performance.now();
-    function tick(now){
-      var dt = Math.min((now-last)/1000, 0.05);
-      last = now;
-      orbs.forEach(function(el){
-        el._angle += el._rot*dt;
-        el.style.transform = 'rotate('+el._angle.toFixed(1)+'deg)';
-      });
-      requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
   })();
 
   /* magnetic buttons */
