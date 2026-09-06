@@ -40,7 +40,7 @@ export default function Services({ onFilterTo }) {
       <div className="wrap">
         <p className="eyebrow reveal">O que eu entrego</p>
         <h2 className="reveal" style={{ fontSize: "clamp(28px,4vw,44px)", maxWidth: "16ch" }}>
-          Serviços pensados pra resolver, não só decorar.
+          Vídeo, design ou marca: a solução dita o formato, não o contrário.
         </h2>
         <div className="solutions-list">
           {SERVICES.map((s) => (

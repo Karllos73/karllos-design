@@ -87,11 +87,31 @@ function buildParticles(count, baseRadius) {
   return { basePositions, phases, scales, spinSpeeds, colors };
 }
 
-export default function DigitalOrganism({ groupRef, reduceMotion, isDesktop }) {
+// How far (in local/unscaled units) the cursor's projected position opens
+// space between particles, and how strongly — tapered to 0 at the radius
+// edge so it reads as triangles parting around the pointer, not a hard cutoff.
+const REPEL_RADIUS = 0.85;
+const REPEL_STRENGTH = 0.55;
+
+const DEFAULT_TARGET = { scale: 1, x: 0, opacity: 1 };
+
+export default function DigitalOrganism({ groupRef, reduceMotion, isDesktop, targetRef }) {
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const mouse = useRef({ x: 0, y: 0 });
   const damped = useRef({ x: 0, y: 0 });
+
+  const initialTarget = targetRef?.current || DEFAULT_TARGET;
+  const scaleDamped = useRef(initialTarget.scale);
+  const xDamped = useRef(initialTarget.x);
+  const opacityDamped = useRef(initialTarget.opacity);
+
+  const raycaster = useMemo(() => new THREE.Raycaster(), []);
+  const repelPlane = useMemo(() => new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), []);
+  const ndc = useMemo(() => new THREE.Vector2(), []);
+  const hitWorld = useMemo(() => new THREE.Vector3(), []);
+  const hitLocal = useMemo(() => new THREE.Vector3(), []);
+  const delta = useMemo(() => new THREE.Vector3(), []);
 
   const count = isDesktop ? 2600 : 700;
   const baseRadius = 1.65;
@@ -155,11 +175,24 @@ export default function DigitalOrganism({ groupRef, reduceMotion, isDesktop }) {
       damped.current.y += (mouse.current.y - damped.current.y) * 0.045;
     }
 
+    // Scroll-driven size/position/opacity: eased toward whichever
+    // section's target is currently active (see GlobalOrganism.jsx). Runs
+    // even under reduced motion so the organism still recedes to a small,
+    // dim background presence outside the Hero instead of staying
+    // hero-sized and full-strength for the rest of the page.
+    const target = targetRef?.current || DEFAULT_TARGET;
+    scaleDamped.current += (target.scale - scaleDamped.current) * 0.06;
+    xDamped.current += (target.x - xDamped.current) * 0.06;
+    opacityDamped.current += (target.opacity - opacityDamped.current) * 0.06;
+    if (mesh.material) mesh.material.opacity = opacityDamped.current;
+
+    const breathe = reduceMotion ? 1 : 1 + Math.sin(t * ((2 * Math.PI) / 8)) * 0.015;
+    group.scale.setScalar(breathe * scaleDamped.current);
+    group.position.x = xDamped.current;
+
     if (reduceMotion) return;
 
-    // Group-level breathing: scale pulse, slow rotation, gentle float.
-    const breathe = 1 + Math.sin(t * ((2 * Math.PI) / 8)) * 0.015;
-    group.scale.setScalar(breathe);
+    // Group-level idle rotation + gentle float.
     const idleY = t * 0.045 + Math.sin(t * ((2 * Math.PI) / 9)) * THREE.MathUtils.degToRad(2);
     const idleX = Math.sin(t * ((2 * Math.PI) / 6.5) + 1.3) * THREE.MathUtils.degToRad(1);
     const cursorY = damped.current.x * THREE.MathUtils.degToRad(6);
@@ -168,6 +201,22 @@ export default function DigitalOrganism({ groupRef, reduceMotion, isDesktop }) {
     group.rotation.x = idleX + cursorX;
     group.position.y = Math.sin(t * ((2 * Math.PI) / 7)) * 0.05;
 
+    // Cursor "opens space" effect: project the mouse onto the plane the
+    // organism sits on, convert into the group's local space (so it stays
+    // correct under the group's own rotation/scale/position), then push
+    // any particle within REPEL_RADIUS outward with a squared falloff.
+    let hasHit = false;
+    if (isDesktop && !reduceMotion) {
+      ndc.set(mouse.current.x, -mouse.current.y);
+      raycaster.setFromCamera(ndc, state.camera);
+      hasHit = !!raycaster.ray.intersectPlane(repelPlane, hitWorld);
+      if (hasHit) {
+        group.updateMatrixWorld();
+        hitLocal.copy(hitWorld);
+        group.worldToLocal(hitLocal);
+      }
+    }
+
     // Per-particle wave: a slow ripple of radial pulsing across the
     // surface, phase-offset per particle so it reads as one wave passing
     // through a collective, not synchronized flashing.
@@ -175,6 +224,17 @@ export default function DigitalOrganism({ groupRef, reduceMotion, isDesktop }) {
     for (let i = 0; i < count; i++) {
       const radiusMod = 1 + Math.sin(t * 0.6 + phases[i]) * 0.045;
       dummy.position.copy(basePositions[i]).multiplyScalar(radiusMod);
+
+      if (hasHit) {
+        delta.copy(dummy.position).sub(hitLocal);
+        const dist = delta.length();
+        if (dist < REPEL_RADIUS && dist > 1e-4) {
+          const falloff = 1 - dist / REPEL_RADIUS;
+          const push = falloff * falloff * REPEL_STRENGTH;
+          dummy.position.addScaledVector(delta, push / dist);
+        }
+      }
+
       dummy.rotation.set(t * spinSpeeds[i], t * spinSpeeds[i] * 0.7, 0);
       dummy.scale.setScalar(scales[i]);
       dummy.updateMatrix();
@@ -186,7 +246,7 @@ export default function DigitalOrganism({ groupRef, reduceMotion, isDesktop }) {
   return (
     <group ref={groupRef}>
       <instancedMesh ref={meshRef} args={[geometry, undefined, count]}>
-        <meshStandardMaterial vertexColors roughness={0.4} metalness={0.25} />
+        <meshStandardMaterial vertexColors roughness={0.4} metalness={0.25} transparent opacity={1} />
       </instancedMesh>
     </group>
   );

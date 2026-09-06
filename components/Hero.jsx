@@ -1,62 +1,32 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import dynamic from "next/dynamic";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// The 3D canvas touches window/WebGL — load client-side only.
-const Hero3D = dynamic(() => import("./Hero3D"), { ssr: false });
-
 export default function Hero() {
   const sectionRef = useRef(null);
-  const canvasColRef = useRef(null);
-  const groupRef = useRef();
-  const materialRef = useRef();
-  const [mount3D, setMount3D] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(true);
 
   useEffect(() => {
     setReduceMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-    setIsDesktop(window.matchMedia("(min-width:768px)").matches);
-    setMount3D(true);
   }, []);
-
-  // Pause the (single, shared) WebGL canvas when the hero scrolls out of view.
-  useEffect(() => {
-    if (!mount3D || !sectionRef.current) return;
-    const canvas = () => canvasColRef.current?.querySelector("canvas");
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        const c = canvas();
-        if (!c) return;
-        c.style.visibility = entry.isIntersecting ? "visible" : "hidden";
-      },
-      { threshold: 0 }
-    );
-    io.observe(sectionRef.current);
-    return () => io.disconnect();
-  }, [mount3D]);
 
   // Entrance sequence: content visible by default in CSS; GSAP only sets a
   // "from" state right before animating in, so a stalled tween never leaves
   // anything permanently hidden. A hard fallback guarantees visibility.
+  // (The 3D organism now lives in GlobalOrganism.jsx, mounted once at the
+  // layout level — it owns its own self-contained entrance.)
   useEffect(() => {
     const textEls = sectionRef.current.querySelectorAll(".hero-word, .hero-anim");
-    const canvasWrap = canvasColRef.current;
 
     function forceVisible() {
       textEls.forEach((el) => {
         el.style.opacity = 1;
         el.style.transform = "none";
       });
-      if (canvasWrap) {
-        canvasWrap.style.opacity = 1;
-        canvasWrap.style.filter = "none";
-      }
     }
 
     if (reduceMotion) {
@@ -67,7 +37,6 @@ export default function Hero() {
     gsap.set('[data-anim="label"], [data-anim="lede"]', { opacity: 0, y: 15 });
     gsap.set(".hero-word", { yPercent: 115 });
     gsap.set('[data-anim="cta"]', { opacity: 0, scale: 0.96 });
-    if (canvasWrap) gsap.set(canvasWrap, { opacity: 0, scale: 0.82, filter: "blur(10px)" });
 
     const tl = gsap.timeline({
       defaults: { ease: "expo.out" },
@@ -76,16 +45,11 @@ export default function Hero() {
     tl.to('[data-anim="label"]', { opacity: 1, y: 0, duration: 0.3 }, 0.3)
       .to(".hero-word", { yPercent: 0, duration: 0.45, stagger: 0.1, ease: "expo.out" }, 0.45)
       .to('[data-anim="lede"]', { opacity: 1, y: 0, duration: 0.4 }, 0.7)
-      .to('[data-anim="cta"]', { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 0.85)
-      .to(
-        canvasWrap,
-        { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "power2.out" },
-        0.7
-      );
+      .to('[data-anim="cta"]', { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.6)" }, 0.85);
 
     const failsafe = setTimeout(forceVisible, 3000);
     return () => clearTimeout(failsafe);
-  }, [reduceMotion, mount3D]);
+  }, [reduceMotion]);
 
   return (
     <section className="hero" id="hero-section" ref={sectionRef}>
@@ -121,17 +85,6 @@ export default function Hero() {
               <span className="label">Falar no WhatsApp</span>
             </a>
           </div>
-        </div>
-        <div className="hero-canvas-col" ref={canvasColRef}>
-          <div className="hero-canvas-glow" aria-hidden="true" />
-          {mount3D && (
-            <Hero3D
-              groupRef={groupRef}
-              materialRef={materialRef}
-              reduceMotion={reduceMotion}
-              isDesktop={isDesktop}
-            />
-          )}
         </div>
       </div>
       <div className="hero-foot hero-foot-wrap">

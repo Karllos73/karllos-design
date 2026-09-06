@@ -29,7 +29,7 @@ export default function Process() {
       <div className="wrap">
         <p className="eyebrow reveal">Como eu trabalho</p>
         <h2 className="reveal" style={{ fontSize: "clamp(28px,4vw,44px)" }}>
-          Do briefing à entrega. Sem ruído no meio.
+          Um processo só, do briefing ao arquivo final, sem ruído no meio.
         </h2>
         <div className="process-grid">
           {STEPS.map((s) => (

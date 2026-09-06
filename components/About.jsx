@@ -105,7 +105,9 @@ export default function About() {
         </div>
         <div className="about-text" ref={aboutTextRef}>
           <p className="eyebrow reveal">Quem sou eu</p>
-          <h2 className="reveal">Um estúdio de uma pessoa. Um processo que não deixa nada ao acaso.</h2>
+          <h2 className="reveal">
+            Aqui, corte e design nascem do mesmo processo: entender a história antes de decidir a forma.
+          </h2>
           {PARAGRAPHS.map((text, i) => (
             <p
               key={i}

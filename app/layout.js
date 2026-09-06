@@ -5,6 +5,7 @@ import RevealObserver from "@/components/RevealObserver";
 import ButtonMotion from "@/components/ButtonMotion";
 import CursorDot from "@/components/CursorDot";
 import CookieBar from "@/components/CookieBar";
+import GlobalOrganism from "@/components/GlobalOrganism";
 
 const displayFont = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -34,6 +35,7 @@ export default function RootLayout({ children }) {
         <RevealObserver />
         <ButtonMotion />
         <CursorDot />
+        <GlobalOrganism />
         {children}
         <CookieBar />
       </body>

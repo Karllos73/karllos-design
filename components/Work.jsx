@@ -136,7 +136,7 @@ const Work = forwardRef(function Work(_props, ref) {
       <div className="wrap">
         <p className="eyebrow reveal">Trabalhos</p>
         <h2 className="reveal" style={{ fontSize: "clamp(28px,4vw,44px)" }}>
-          Trabalho que fala por si.
+          Projetos onde craft e narrativa viram uma coisa só.
         </h2>
         <div className="filters" role="group" aria-label="Filtrar trabalhos por área">
           {FILTERS.map((f) => (

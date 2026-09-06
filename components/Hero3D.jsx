@@ -5,13 +5,12 @@ import { Canvas, useThree } from "@react-three/fiber";
 import DigitalOrganism from "./DigitalOrganism";
 
 /**
- * Phase 1 of the "digital organism" particle experience — see
- * DigitalOrganism.jsx for the particle system itself. This file just owns
- * the Canvas/scene/lighting shell so later phases (scroll-driven camera
- * moves, a promotion to a page-wide fixed canvas) have a stable place to
- * plug into without touching the particle logic.
+ * The "digital organism" particle experience — see DigitalOrganism.jsx for
+ * the particle system itself. This file just owns the Canvas/scene/lighting
+ * shell. It's mounted once, globally (GlobalOrganism.jsx), as a fixed
+ * full-viewport background layer rather than scoped to the Hero.
  */
-function Scene({ groupRef, reduceMotion, isDesktop }) {
+function Scene({ groupRef, reduceMotion, isDesktop, targetRef }) {
   const { gl } = useThree();
   useMemo(() => {
     gl.setClearColor(0x000000, 0);
@@ -26,19 +25,24 @@ function Scene({ groupRef, reduceMotion, isDesktop }) {
       <pointLight position={[-4, 0.5, 2]} intensity={34} color="#4C72FF" />
       {/* rim right: magenta */}
       <pointLight position={[4, -1, 2]} intensity={34} color="#C449FF" />
-      <DigitalOrganism groupRef={groupRef} reduceMotion={reduceMotion} isDesktop={isDesktop} />
+      <DigitalOrganism
+        groupRef={groupRef}
+        reduceMotion={reduceMotion}
+        isDesktop={isDesktop}
+        targetRef={targetRef}
+      />
     </>
   );
 }
 
 /**
- * groupRef is forwarded so the Hero entrance timeline (GSAP, driven from
- * the DOM) can tween the object's scale/rotation/opacity exactly like
- * every other entrance element on the page. materialRef is accepted for
- * interface compatibility with Hero.jsx but unused — the particle system
- * has no single material to hand back the same way the old solid gem did.
+ * groupRef is forwarded so any future DOM-driven timeline could still tween
+ * the object directly. materialRef is accepted for interface compatibility
+ * but unused — the particle system has no single material to hand back the
+ * same way the old solid gem did. targetRef carries the scroll-driven
+ * scale/x/opacity target (see GlobalOrganism.jsx).
  */
-export default function Hero3D({ groupRef, materialRef, reduceMotion, isDesktop }) {
+export default function Hero3D({ groupRef, materialRef, reduceMotion, isDesktop, targetRef }) {
   return (
     <Canvas
       dpr={[1, isDesktop ? 2 : 1.5]}
@@ -46,7 +50,7 @@ export default function Hero3D({ groupRef, materialRef, reduceMotion, isDesktop 
       gl={{ alpha: true, antialias: true }}
       style={{ position: "absolute", inset: 0 }}
     >
-      <Scene groupRef={groupRef} reduceMotion={reduceMotion} isDesktop={isDesktop} />
+      <Scene groupRef={groupRef} reduceMotion={reduceMotion} isDesktop={isDesktop} targetRef={targetRef} />
     </Canvas>
   );
 }
