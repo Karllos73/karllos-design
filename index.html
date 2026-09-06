@@ -192,6 +192,17 @@
     font-family:var(--mono); font-weight:700; font-size:15px;
     box-shadow:0 20px 40px rgba(0,0,0,.5); will-change:transform;
   }
+  .tool-badge-1{top:6%; left:-8%; color:#4C72FF;}
+  .tool-badge-2{top:34%; right:-14%; color:#C449FF;}
+  .tool-badge-3{bottom:26%; left:-14%; color:#4C72FF;}
+  .tool-badge-4{bottom:4%; right:-6%; color:#E35B71;}
+  @media (max-width:640px){
+    .tool-badge{width:44px; height:44px; font-size:13px;}
+    .tool-badge-1{left:2%;}
+    .tool-badge-2{right:0%;}
+    .tool-badge-3{left:0%;}
+    .tool-badge-4{right:6%;}
+  }
   .about-text .eyebrow{margin-bottom:16px;}
   .about-text h2{font-size:clamp(28px,3.6vw,40px); line-height:1.15; margin-bottom:24px;}
   .about-text p{color:var(--color-text-muted); font-size:17px; line-height:1.7; max-width:52ch;}
@@ -409,10 +420,10 @@
         <div class="avatar reveal">
           <img src="assets/avatar.jpg" alt="Foto de Karllos, autor do estúdio Karllos Design" loading="lazy">
         </div>
-        <div class="tool-badge" data-float="0" style="top:6%; left:-8%; color:#4C72FF;">Pr</div>
-        <div class="tool-badge" data-float="1" style="top:34%; right:-14%; color:#C449FF;">Ae</div>
-        <div class="tool-badge" data-float="2" style="bottom:26%; left:-14%; color:#4C72FF;">Ps</div>
-        <div class="tool-badge" data-float="3" style="bottom:4%; right:-6%; color:#E35B71;">Ai</div>
+        <div class="tool-badge tool-badge-1" data-float="0">Pr</div>
+        <div class="tool-badge tool-badge-2" data-float="1">Ae</div>
+        <div class="tool-badge tool-badge-3" data-float="2">Ps</div>
+        <div class="tool-badge tool-badge-4" data-float="3">Ai</div>
         <div class="about-index"><span class="bar"></span>01 / 04</div>
       </div>
       <div class="about-text">
