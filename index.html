@@ -675,13 +675,12 @@
     });
   })();
 
-  /* tech orbs: continuous slow spin + scroll-driven parallax and extra rotation */
+  /* tech orbs: fixed in place, only rotating continuously (no scroll movement) */
   (function(){
     var orbs = Array.prototype.slice.call(document.querySelectorAll('.tech-orb'));
     if(!orbs.length) return;
     if(reduceMotion) return;
     orbs.forEach(function(el, i){
-      el._speed = parseFloat(el.dataset.speed) || 0.1;
       el._rot = parseFloat(el.dataset.rot) || (5 + i*2);
       el._angle = (i*47) % 360;
     });
@@ -689,11 +688,9 @@
     function tick(now){
       var dt = Math.min((now-last)/1000, 0.05);
       last = now;
-      var sy = window.scrollY || window.pageYOffset || 0;
       orbs.forEach(function(el){
-        el._angle += el._rot*dt + sy*0.0015;
-        var ty = -sy*el._speed;
-        el.style.transform = 'translateY('+ty.toFixed(1)+'px) rotate('+el._angle.toFixed(1)+'deg)';
+        el._angle += el._rot*dt;
+        el.style.transform = 'rotate('+el._angle.toFixed(1)+'deg)';
       });
       requestAnimationFrame(tick);
     }
