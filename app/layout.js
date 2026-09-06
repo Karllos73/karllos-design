@@ -6,6 +6,7 @@ import ButtonMotion from "@/components/ButtonMotion";
 import CursorDot from "@/components/CursorDot";
 import CookieBar from "@/components/CookieBar";
 import GlobalOrganism from "@/components/GlobalOrganism";
+import MotionDirector from "@/components/MotionDirector";
 
 const displayFont = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -31,7 +32,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR" className={`${displayFont.variable} ${bodyFont.variable}`}>
       <body>
+        <a className="skip-link" href="#hero-section">
+          Pular para o conteúdo
+        </a>
         <SmoothScrollProvider />
+        <MotionDirector />
         <RevealObserver />
         <ButtonMotion />
         <CursorDot />

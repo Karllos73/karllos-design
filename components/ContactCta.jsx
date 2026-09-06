@@ -73,13 +73,46 @@ export default function ContactCta() {
         </div>
         <form className="lead-form reveal" noValidate onSubmit={onSubmit}>
           <div className="lead-row">
-            <input type="text" name="name" placeholder="Seu nome" required autoComplete="name" />
-            <input type="text" name="contact" placeholder="WhatsApp ou e-mail" required autoComplete="tel" />
+            <label className="sr-only" htmlFor="lead-name">
+              Seu nome
+            </label>
+            <input
+              id="lead-name"
+              type="text"
+              name="name"
+              placeholder="Seu nome"
+              required
+              autoComplete="name"
+            />
+            <label className="sr-only" htmlFor="lead-contact">
+              WhatsApp ou e-mail
+            </label>
+            <input
+              id="lead-contact"
+              type="text"
+              name="contact"
+              placeholder="WhatsApp ou e-mail"
+              required
+              autoComplete="tel"
+            />
           </div>
-          <textarea name="brief" rows="3" placeholder="Conta rapidamente sobre o projeto (opcional)"></textarea>
+          <label className="sr-only" htmlFor="lead-brief">
+            Conta rapidamente sobre o projeto
+          </label>
+          <textarea
+            id="lead-brief"
+            name="brief"
+            rows="3"
+            placeholder="Conta rapidamente sobre o projeto (opcional)"
+          ></textarea>
           <button type="submit" className="btn btn-primary" disabled={sending}>
             <span className="label">Enviar mensagem</span>
           </button>
+          <p className="lead-consent">
+            Ao enviar, você concorda com a{" "}
+            <a href="/privacidade">Política de Privacidade</a>. Usamos seus dados só para
+            responder sobre o projeto.
+          </p>
           <p className={`lead-note${success ? " success" : ""}`} role="status">
             {note}
           </p>

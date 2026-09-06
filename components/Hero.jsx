@@ -53,6 +53,10 @@ export default function Hero() {
 
   return (
     <section className="hero" id="hero-section" ref={sectionRef}>
+      <div className="hero-stage-line" aria-hidden="true"></div>
+      <div className="hero-orbit" aria-hidden="true">
+        <span>DESIGN</span><span>MOTION</span><span>IDENTIDADE</span>
+      </div>
       <div className="wrap">
         <div className="hero-content">
           <p className="eyebrow hero-anim" data-anim="label">

@@ -49,7 +49,7 @@ export default function Header() {
             type="button"
             aria-expanded={open}
             aria-controls="mobileMenu"
-            aria-label="Abrir menu"
+            aria-label={open ? "Fechar menu" : "Abrir menu"}
             onClick={() => setOpen((v) => !v)}
           >
             <span></span>
@@ -72,6 +72,7 @@ export default function Header() {
           Contato
         </a>
         <a href="/privacidade">Privacidade</a>
+        <a href="/termos">Termos de Uso</a>
       </div>
     </header>
   );

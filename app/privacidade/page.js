@@ -18,6 +18,13 @@ export default function Privacidade() {
         Esta página explica de forma simples quais dados são coletados aqui e para que servem.
       </p>
 
+      <h2>Quem trata os seus dados</h2>
+      <p>
+        O responsável pelo tratamento dos dados coletados neste site (controlador, nos termos da
+        LGPD) é <strong>Ruann Karllos</strong>, profissional autônomo, contato:{" "}
+        <a href="mailto:ruannkarllos05@gmail.com">ruannkarllos05@gmail.com</a>.
+      </p>
+
       <h2>Quais dados coletamos</h2>
       <p>Só coletamos o que você mesmo digita no formulário de contato, no rodapé do site:</p>
       <ul>
@@ -35,7 +42,15 @@ export default function Privacidade() {
       <p>
         As informações do formulário são usadas exclusivamente para eu entrar em contato sobre o
         seu projeto. Não vendo, alugo nem compartilho esses dados com terceiros para fins de
-        marketing.
+        marketing. A base legal para esse tratamento é o seu consentimento, dado ao preencher e
+        enviar o formulário voluntariamente (art. 7º, inciso I, da LGPD).
+      </p>
+
+      <h2>Por quanto tempo guardamos os dados</h2>
+      <p>
+        Os dados enviados pelo formulário ficam guardados enquanto forem úteis para o contato
+        sobre o seu projeto, ou até você pedir a exclusão — o que acontecer primeiro. Não há
+        prazo automático de exclusão além disso.
       </p>
 
       <h2>Onde os dados ficam armazenados</h2>
@@ -65,8 +80,10 @@ export default function Privacidade() {
 
       <h2>Seus direitos</h2>
       <p>
-        Você pode pedir a qualquer momento para eu excluir os dados que enviou pelo formulário.
-        Basta me chamar por um dos canais abaixo.
+        Conforme a LGPD, você pode a qualquer momento pedir para eu confirmar quais dados seus eu
+        tenho, corrigir alguma informação ou excluir os dados que enviou pelo formulário. Basta me
+        chamar por um dos canais abaixo. Veja também os{" "}
+        <a href="/termos">Termos de Uso</a> do site.
       </p>
 
       <h2>Contato</h2>

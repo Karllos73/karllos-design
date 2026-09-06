@@ -17,7 +17,13 @@ export default function SmoothScrollProvider() {
     const isDesktop = window.matchMedia("(min-width:768px)").matches;
     if (reduceMotion || !isDesktop) return;
 
-    const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+    const lenis = new Lenis({
+      duration: 1.35,
+      smoothWheel: true,
+      wheelMultiplier: 0.92,
+      touchMultiplier: 1.05,
+      anchors: { offset: -90 },
+    });
     lenis.on("scroll", ScrollTrigger.update);
 
     function raf(time) {

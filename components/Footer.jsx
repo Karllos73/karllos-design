@@ -9,6 +9,7 @@ export default function Footer() {
             <a href="#sobre">Sobre</a>
             <a href="#processo">Processo</a>
             <a href="/privacidade">Privacidade</a>
+            <a href="/termos">Termos de Uso</a>
           </div>
         </div>
       </div>
