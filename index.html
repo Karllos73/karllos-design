@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Karllos Design</title>
+<meta name="description" content="Karllos Design — edição de vídeo, design gráfico e identidade visual. Estúdio de uma pessoa só, processo do briefing à entrega sem ruído no meio.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Jost:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -19,7 +20,7 @@
     --ember-glow:rgba(124,58,237,.38);
     --bone:#ece5d6;
     --bone-dim:#a39b89;
-    --bone-faint:#6f6858;
+    --bone-faint:#857c69;
     --mono: 'JetBrains Mono', ui-monospace, monospace;
     --display: 'Cinzel', 'Times New Roman', serif;
     --body: 'Jost', 'Century Gothic', sans-serif;
@@ -90,7 +91,12 @@
   /* ---------- hero ---------- */
   .hero{position:relative; padding:150px 0 0; overflow:hidden;}
   #heroField{position:absolute; inset:0; width:100%; height:100%; display:block;}
-  .hero-inner{position:relative; display:flex; flex-direction:column; align-items:center; text-align:center; gap:22px; padding-bottom:64px;}
+  .hero-veil{
+    position:absolute; left:50%; top:44%; transform:translate(-50%,-50%);
+    width:130%; max-width:1000px; aspect-ratio:1; pointer-events:none;
+    background:radial-gradient(circle, rgba(11,10,8,.6) 0%, rgba(11,10,8,.32) 45%, transparent 72%);
+  }
+  .hero-inner{position:relative; display:flex; flex-direction:column; align-items:center; text-align:center; gap:26px; padding-bottom:64px;}
 
   .hero h1{
     font-size:clamp(38px, 7vw, 78px); letter-spacing:.01em; color:var(--bone);
@@ -181,6 +187,11 @@
 
   .reveal{opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s cubic-bezier(.16,1,.3,1);}
   .reveal.in-view{opacity:1; transform:translateY(0);}
+  .timeline .phase.reveal:nth-child(2){transition-delay:.08s;}
+  .timeline .phase.reveal:nth-child(3){transition-delay:.16s;}
+  .timeline .phase.reveal:nth-child(4){transition-delay:.24s;}
+  .grid .tilt-card.reveal:nth-child(3n+2){transition-delay:.08s;}
+  .grid .tilt-card.reveal:nth-child(3n+3){transition-delay:.16s;}
 
   /* ---------- about ---------- */
   .about{position:relative;}
@@ -298,9 +309,22 @@
     margin-top:56px; padding-top:28px; border-top:1px solid var(--stone-soft);
     font-family:var(--mono); font-size:12px; color:var(--bone-faint); letter-spacing:.04em;
   }
-  .foot-links{display:flex; gap:24px;}
+  .foot-links{display:flex; gap:24px; flex-wrap:wrap;}
   .foot-links a{color:var(--bone-faint); text-decoration:none; transition:color .2s ease;}
   .foot-links a:hover{color:var(--ember);}
+
+  /* ---------- cookie consent ---------- */
+  .cookie-bar{
+    position:fixed; left:20px; right:20px; bottom:20px; z-index:80; max-width:560px; margin:0 auto;
+    background:var(--surface-2); border:1px solid var(--stone-soft); border-radius:12px;
+    padding:20px 22px; box-shadow:0 20px 50px rgba(0,0,0,.45);
+    display:flex; flex-wrap:wrap; align-items:center; gap:16px;
+    transform:translateY(140%); transition:transform .5s cubic-bezier(.16,1,.3,1);
+  }
+  .cookie-bar.show{transform:translateY(0);}
+  .cookie-bar p{color:var(--bone-dim); font-size:13.5px; font-weight:300; flex:1; min-width:220px;}
+  .cookie-bar p a{color:var(--bone); text-decoration:underline; text-underline-offset:2px;}
+  .cookie-bar .btn{padding:11px 22px; font-size:12px; white-space:nowrap;}
 </style>
 </head>
 <body>
@@ -327,6 +351,7 @@
 <main id="top">
   <section class="hero">
     <div id="heroField" aria-hidden="true"></div>
+    <div class="hero-veil" aria-hidden="true"></div>
     <div class="wrap hero-inner">
       <h1>
         <span class="split-line"><span class="split-word">Corto</span> <span class="split-word">o</span> <span class="split-word">que</span> <span class="split-word">sobra.</span></span>
@@ -351,7 +376,7 @@
 
   <section class="about" id="sobre">
     <div class="wrap">
-      <div class="avatar-tilt">
+      <div class="avatar-tilt reveal">
         <div class="avatar" id="avatarTilt"><img src="assets/avatar.jpg" alt="Foto de Karllos, autor do estúdio Karllos Design" loading="lazy"></div>
       </div>
       <div class="about-text reveal">
@@ -370,7 +395,7 @@
         <h2>Trabalho que fala por si.</h2>
         <p class="lede">Vídeo, design e marca. Filtre por área.</p>
       </div>
-      <div class="filters" role="group" aria-label="Filtrar trabalhos por área">
+      <div class="filters reveal" role="group" aria-label="Filtrar trabalhos por área">
         <button class="filter-btn" data-filter="todos" aria-pressed="true">Todos</button>
         <button class="filter-btn" data-filter="video" aria-pressed="false">Vídeo</button>
         <button class="filter-btn" data-filter="design" aria-pressed="false">Design</button>
@@ -430,17 +455,23 @@
           <p class="lead-note" id="leadNote" role="status"></p>
         </form>
       </div>
-      <div class="foot-bottom">
+      <div class="foot-bottom reveal">
         <span>© 2026 Karllos Design.</span>
         <div class="foot-links">
           <a href="#trabalhos">Trabalhos</a>
           <a href="#sobre">Sobre</a>
           <a href="#processo">Processo</a>
+          <a href="privacidade.html">Privacidade</a>
         </div>
       </div>
     </div>
   </footer>
 </main>
+
+<div class="cookie-bar" id="cookieBar" role="dialog" aria-label="Aviso de cookies" hidden>
+  <p>Este site usa apenas armazenamento local essencial (sem cookies de rastreamento). Veja a <a href="privacidade.html">Política de Privacidade</a>.</p>
+  <button class="btn btn-primary" id="cookieAccept" type="button">Entendi</button>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" integrity="sha512-dLxUelApnYxpLt6K2iomGngnHO83iUvZytA3YjDUCjT0HDOHKXnVYdf3hU4JjM8uEhxf9nD1/ey98U3t2vZ0qQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
@@ -645,6 +676,25 @@
         btn.disabled = false;
         note.textContent = 'Não consegui enviar agora — me chama no WhatsApp.';
       });
+    });
+  })();
+
+  /* cookie consent banner */
+  (function(){
+    var bar = document.getElementById('cookieBar');
+    var accept = document.getElementById('cookieAccept');
+    if(!bar || !accept) return;
+    var KEY = 'karllos_cookie_consent';
+    var already;
+    try{ already = localStorage.getItem(KEY); }catch(e){ already = null; }
+    if(!already){
+      bar.hidden = false;
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ bar.classList.add('show'); }); });
+    }
+    accept.addEventListener('click', function(){
+      try{ localStorage.setItem(KEY, 'accepted'); }catch(e){}
+      bar.classList.remove('show');
+      setTimeout(function(){ bar.hidden = true; }, reduceMotion ? 0 : 500);
     });
   })();
 
