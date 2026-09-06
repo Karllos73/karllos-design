@@ -99,7 +99,33 @@
     transition:background .25s ease, border-color .25s ease;
   }
   .navcta:hover, .navcta:focus-visible{background:rgba(124,58,237,.20); border-color:rgba(196,163,255,.45);}
-  @media (max-width:860px){ .navlinks{display:none;} }
+  .nav-right{display:flex; align-items:center; gap:14px;}
+  .nav-toggle{
+    display:none; flex-direction:column; justify-content:center; gap:5px;
+    width:32px; height:32px; padding:0; background:none; border:none; cursor:pointer;
+  }
+  .nav-toggle span{display:block; width:100%; height:2px; background:var(--bone); border-radius:2px; transition:transform .25s ease, opacity .25s ease;}
+  .nav-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .nav-toggle[aria-expanded="true"] span:nth-child(2){opacity:0;}
+  .nav-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  .mobile-menu{
+    position:fixed; top:76px; left:0; right:0; z-index:49;
+    background:rgba(11,10,8,.97); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--stone-soft);
+    display:flex; flex-direction:column; padding:4px 20px 20px;
+    transform:translateY(-14px); opacity:0; pointer-events:none;
+    transition:transform .25s ease, opacity .25s ease;
+  }
+  .mobile-menu.show{transform:translateY(0); opacity:1; pointer-events:auto;}
+  .mobile-menu a{
+    font-family:var(--mono); font-size:13px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--bone-dim); text-decoration:none; padding:16px 0; border-top:1px solid var(--stone-soft);
+  }
+  .mobile-menu a:hover, .mobile-menu a:focus-visible{color:var(--ember);}
+  @media (max-width:860px){
+    .navlinks{display:none;}
+    .nav-toggle{display:flex;}
+  }
 
   /* ---------- hero ---------- */
   .hero{position:relative; padding:150px 0 0; overflow:hidden;}
@@ -170,7 +196,13 @@
     width:250px; height:300px; z-index:3;
     display:flex; flex-direction:column; align-items:flex-end; gap:14px;
   }
-  @media (max-width:980px){ .tools-wheel-wrap{display:none;} }
+  @media (max-width:980px){
+    .tools-wheel-wrap{
+      position:static; transform:none; width:100%; max-width:260px;
+      height:170px; z-index:auto; align-items:center; margin:8px auto 0;
+    }
+    .tools-wheel-wrap .eyebrow{margin-right:0;}
+  }
   .tools-wheel-wrap .eyebrow{margin-right:2px;}
   .tools-wheel{ position:relative; flex:1; width:100%; }
 
@@ -296,7 +328,9 @@
     background:radial-gradient(50% 55% at 50% 25%, rgba(124,58,237,.22), transparent 72%);
   }
   #ctaOrb{position:absolute; top:-52px; right:0; width:190px; height:190px; opacity:.55; pointer-events:none;}
-  @media (max-width:640px){ #ctaOrb{display:none;} }
+  @media (max-width:640px){
+    #ctaOrb{position:static; width:92px; height:92px; margin:0 auto 14px; opacity:.7;}
+  }
   .cta-plate h2{font-size:clamp(26px,4vw,36px); margin-bottom:16px;}
   .cta-plate p{color:var(--bone-dim); font-weight:300; max-width:46ch; margin:0 auto 32px;}
   .contact-actions{display:flex; gap:16px; justify-content:center; flex-wrap:wrap;}
@@ -358,8 +392,20 @@
       <a href="#contato">Contato</a>
       <a href="privacidade.html" class="legal">Privacidade</a>
     </div>
-    <a class="navcta" href="#contato">Vamos criar</a>
+    <div class="nav-right">
+      <a class="navcta" href="#contato">Vamos criar</a>
+      <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </nav>
+  <div class="mobile-menu" id="mobileMenu" hidden>
+    <a href="#trabalhos">Trabalhos</a>
+    <a href="#sobre">Sobre</a>
+    <a href="#processo">Processo</a>
+    <a href="#contato">Contato</a>
+    <a href="privacidade.html">Privacidade</a>
+  </div>
 </header>
 
 <main id="top">
@@ -691,6 +737,29 @@
         note.textContent = 'Não consegui enviar agora — me chama no WhatsApp.';
       });
     });
+  })();
+
+  /* mobile nav menu */
+  (function(){
+    var toggle = document.getElementById('navToggle');
+    var menu = document.getElementById('mobileMenu');
+    if(!toggle || !menu) return;
+    function close(){
+      toggle.setAttribute('aria-expanded','false');
+      menu.classList.remove('show');
+      setTimeout(function(){ menu.hidden = true; }, reduceMotion ? 0 : 250);
+    }
+    function open(){
+      menu.hidden = false;
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ menu.classList.add('show'); }); });
+      toggle.setAttribute('aria-expanded','true');
+    }
+    toggle.addEventListener('click', function(){
+      var isOpen = toggle.getAttribute('aria-expanded') === 'true';
+      isOpen ? close() : open();
+    });
+    menu.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', close); });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close(); });
   })();
 
   /* cookie consent banner */
