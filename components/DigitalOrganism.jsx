@@ -95,7 +95,7 @@ const REPEL_STRENGTH = 0.55;
 
 const DEFAULT_TARGET = { scale: 1, x: 0, opacity: 1 };
 
-export default function DigitalOrganism({ groupRef, reduceMotion, isDesktop, targetRef }) {
+export default function DigitalOrganism({ groupRef, reduceMotion, isDesktop, targetRef, explodeRef }) {
   const meshRef = useRef();
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const mouse = useRef({ x: 0, y: 0 });
@@ -184,7 +184,12 @@ export default function DigitalOrganism({ groupRef, reduceMotion, isDesktop, tar
     scaleDamped.current += (target.scale - scaleDamped.current) * 0.06;
     xDamped.current += (target.x - xDamped.current) * 0.06;
     opacityDamped.current += (target.opacity - opacityDamped.current) * 0.06;
-    if (mesh.material) mesh.material.opacity = opacityDamped.current;
+
+    // Final-scene dissipation: fades out regardless of reduced-motion
+    // (the outward particle explosion below is the motion-heavy part and
+    // stays gated behind it, but a plain fade-to-nothing is fine either way).
+    const explode = explodeRef?.current || 0;
+    if (mesh.material) mesh.material.opacity = opacityDamped.current * (1 - explode);
 
     const breathe = reduceMotion ? 1 : 1 + Math.sin(t * ((2 * Math.PI) / 8)) * 0.015;
     group.scale.setScalar(breathe * scaleDamped.current);
@@ -221,6 +226,12 @@ export default function DigitalOrganism({ groupRef, reduceMotion, isDesktop, tar
     // surface, phase-offset per particle so it reads as one wave passing
     // through a collective, not synchronized flashing.
     const { basePositions, phases, scales, spinSpeeds } = particles;
+    // Quadratic ease so the explosion starts slow and flies apart fast —
+    // each particle's own base position is already a direction+radius
+    // from the origin, so simply scaling it further out reads as the
+    // whole mass blowing apart rather than just growing.
+    const explodeScale = 1 + explode * explode * 9;
+    const spinKick = 1 + explode * 6;
     for (let i = 0; i < count; i++) {
       const radiusMod = 1 + Math.sin(t * 0.6 + phases[i]) * 0.045;
       dummy.position.copy(basePositions[i]).multiplyScalar(radiusMod);
@@ -235,7 +246,9 @@ export default function DigitalOrganism({ groupRef, reduceMotion, isDesktop, tar
         }
       }
 
-      dummy.rotation.set(t * spinSpeeds[i], t * spinSpeeds[i] * 0.7, 0);
+      if (explode > 0) dummy.position.multiplyScalar(explodeScale);
+
+      dummy.rotation.set(t * spinSpeeds[i] * spinKick, t * spinSpeeds[i] * 0.7 * spinKick, 0);
       dummy.scale.setScalar(scales[i]);
       dummy.updateMatrix();
       mesh.setMatrixAt(i, dummy.matrix);

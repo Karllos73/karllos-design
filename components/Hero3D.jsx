@@ -10,7 +10,7 @@ import DigitalOrganism from "./DigitalOrganism";
  * shell. It's mounted once, globally (GlobalOrganism.jsx), as a fixed
  * full-viewport background layer rather than scoped to the Hero.
  */
-function Scene({ groupRef, reduceMotion, isDesktop, targetRef }) {
+function Scene({ groupRef, reduceMotion, isDesktop, targetRef, explodeRef }) {
   const { gl } = useThree();
   useMemo(() => {
     gl.setClearColor(0x000000, 0);
@@ -30,6 +30,7 @@ function Scene({ groupRef, reduceMotion, isDesktop, targetRef }) {
         reduceMotion={reduceMotion}
         isDesktop={isDesktop}
         targetRef={targetRef}
+        explodeRef={explodeRef}
       />
     </>
   );
@@ -40,9 +41,10 @@ function Scene({ groupRef, reduceMotion, isDesktop, targetRef }) {
  * the object directly. materialRef is accepted for interface compatibility
  * but unused — the particle system has no single material to hand back the
  * same way the old solid gem did. targetRef carries the scroll-driven
- * scale/x/opacity target (see GlobalOrganism.jsx).
+ * scale/x/opacity target, and explodeRef the final-scene dissipation
+ * progress (see GlobalOrganism.jsx).
  */
-export default function Hero3D({ groupRef, materialRef, reduceMotion, isDesktop, targetRef }) {
+export default function Hero3D({ groupRef, materialRef, reduceMotion, isDesktop, targetRef, explodeRef }) {
   return (
     <Canvas
       dpr={[1, isDesktop ? 2 : 1.5]}
@@ -50,7 +52,13 @@ export default function Hero3D({ groupRef, materialRef, reduceMotion, isDesktop,
       gl={{ alpha: true, antialias: true }}
       style={{ position: "absolute", inset: 0 }}
     >
-      <Scene groupRef={groupRef} reduceMotion={reduceMotion} isDesktop={isDesktop} targetRef={targetRef} />
+      <Scene
+        groupRef={groupRef}
+        reduceMotion={reduceMotion}
+        isDesktop={isDesktop}
+        targetRef={targetRef}
+        explodeRef={explodeRef}
+      />
     </Canvas>
   );
 }

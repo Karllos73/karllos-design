@@ -459,7 +459,11 @@ header.is-scrolled nav.navbar{
 .faq-a p{color:var(--color-text-muted); font-size:15px; line-height:1.7; padding-bottom:26px; max-width:65ch;}
 
 /* ---------- final CTA / contact ---------- */
-.cta-final{position:relative; text-align:center; overflow:hidden; min-height:90svh; display:flex; align-items:center;}
+/* No `overflow` here on purpose — clipping this box also clips the
+   blurred .cta-blob glow right at the section edge, producing a hard
+   visible cut line. The global body{overflow-x:hidden} already prevents
+   any horizontal scrollbar from the ring/glow bleeding past the viewport. */
+.cta-final{position:relative; text-align:center; min-height:90svh; display:flex; align-items:center;}
 .cta-final::before{
   content:""; position:absolute; width:72vw; height:72vw; max-width:900px; max-height:900px;
   left:50%; top:50%; translate:-50% -50%; border:1px solid rgba(196,73,255,.13); border-radius:50%;

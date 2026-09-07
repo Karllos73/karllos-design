@@ -35,6 +35,7 @@ export default function GlobalOrganism() {
   const groupRef = useRef();
   const materialRef = useRef();
   const targetRef = useRef({ ...SECTION_TARGETS["hero-section"] });
+  const explodeRef = useRef(0);
   const [mount3D, setMount3D] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
@@ -70,6 +71,28 @@ export default function GlobalOrganism() {
     return () => triggers.forEach((t) => t.kill());
   }, [mount3D]);
 
+  // Final-scene explosion: as the last (contato) section scrolls into
+  // view, particles fly outward from the organism's core and fade to
+  // nothing — a deliberate one-time "dissipation" instead of just
+  // shrinking like every other section. Scrubbed to scroll position, so
+  // scrolling back up smoothly re-forms it rather than restarting a
+  // one-shot animation.
+  useEffect(() => {
+    if (!mount3D) return;
+    const el = document.getElementById("contato");
+    if (!el) return;
+    const trigger = ScrollTrigger.create({
+      trigger: el,
+      start: "top bottom",
+      end: "top 15%",
+      scrub: 0.6,
+      onUpdate: (self) => {
+        explodeRef.current = self.progress;
+      },
+    });
+    return () => trigger.kill();
+  }, [mount3D]);
+
   return (
     <div className="organism-layer" aria-hidden="true">
       {mount3D && (
@@ -79,6 +102,7 @@ export default function GlobalOrganism() {
           reduceMotion={reduceMotion}
           isDesktop={isDesktop}
           targetRef={targetRef}
+          explodeRef={explodeRef}
         />
       )}
     </div>
