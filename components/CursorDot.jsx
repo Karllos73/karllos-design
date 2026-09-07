@@ -1,16 +1,19 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const GROW_SELECTOR =
-  "a, button, .solution-card, .project, .tool-badge, .faq-q, input, textarea";
+  "a, button, .solution-row, .tool-badge, .faq-q, input, textarea";
+const LABEL_SELECTOR = ".project";
 
 /**
  * Subtle cursor-follower dot, desktop + pointer:fine only. Grows over
- * interactive elements. Never replaces the native cursor.
+ * interactive elements, and expands into a "Ver projeto" pill over work
+ * cards. Never replaces the native cursor.
  */
 export default function CursorDot() {
   const dotRef = useRef(null);
+  const [label, setLabel] = useState(false);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -34,10 +37,12 @@ export default function CursorDot() {
       raf = requestAnimationFrame(loop);
     }
     const onOver = (e) => {
-      if (e.target.closest(GROW_SELECTOR)) dot.classList.add("grow");
+      if (e.target.closest(LABEL_SELECTOR)) setLabel(true);
+      else if (e.target.closest(GROW_SELECTOR)) dot.classList.add("grow");
     };
     const onOut = (e) => {
-      if (e.target.closest(GROW_SELECTOR)) dot.classList.remove("grow");
+      if (e.target.closest(LABEL_SELECTOR)) setLabel(false);
+      else if (e.target.closest(GROW_SELECTOR)) dot.classList.remove("grow");
     };
 
     document.addEventListener("mousemove", onMove);
@@ -53,5 +58,9 @@ export default function CursorDot() {
     };
   }, []);
 
-  return <div className="cursor-dot" ref={dotRef} aria-hidden="true" />;
+  return (
+    <div className={`cursor-dot${label ? " label" : ""}`} ref={dotRef} aria-hidden="true">
+      {label && <span>Ver projeto</span>}
+    </div>
+  );
 }

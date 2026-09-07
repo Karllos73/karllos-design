@@ -12,6 +12,7 @@ const LINKS = [
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   // Close on Escape, matching the original vanilla behavior.
   useEffect(() => {
@@ -23,8 +24,17 @@ export default function Header() {
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // Header starts fully transparent over the Hero and picks up its
+  // blurred pill background once the page has scrolled past it.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header>
+    <header className={scrolled || open ? "is-scrolled" : ""}>
       <nav className="navbar wrap" style={{ paddingLeft: 12, paddingRight: 12 }}>
         <a className="brandmark" href="#top">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -58,21 +68,30 @@ export default function Header() {
           </button>
         </div>
       </nav>
-      <div
-        className={`mobile-menu${open ? " show" : ""}`}
-        id="mobileMenu"
-        hidden={!open}
-      >
-        {LINKS.map((l) => (
-          <a key={l.href} href={l.href} onClick={() => setOpen(false)}>
-            {l.label}
+      <div className={`mobile-menu${open ? " show" : ""}`} id="mobileMenu" hidden={!open}>
+        <nav className="mobile-menu-links">
+          {LINKS.map((l, i) => (
+            <a
+              key={l.href}
+              href={l.href}
+              style={{ transitionDelay: open ? `${80 + i * 60}ms` : "0ms" }}
+              onClick={() => setOpen(false)}
+            >
+              {l.label}
+            </a>
+          ))}
+          <a
+            href="#contato"
+            style={{ transitionDelay: open ? `${80 + LINKS.length * 60}ms` : "0ms" }}
+            onClick={() => setOpen(false)}
+          >
+            Contato
           </a>
-        ))}
-        <a href="#contato" onClick={() => setOpen(false)}>
-          Contato
-        </a>
-        <a href="/privacidade">Privacidade</a>
-        <a href="/termos">Termos de Uso</a>
+        </nav>
+        <div className="mobile-menu-foot">
+          <a href="/privacidade">Privacidade</a>
+          <a href="/termos">Termos de Uso</a>
+        </div>
       </div>
     </header>
   );

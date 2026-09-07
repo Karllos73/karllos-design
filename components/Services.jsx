@@ -1,5 +1,27 @@
 "use client";
 
+const ICONS = {
+  video: (
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M8 5v14l11-7z" />
+    </svg>
+  ),
+  design: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
+      <rect x="4" y="4" width="7" height="7" />
+      <rect x="13" y="4" width="7" height="7" />
+      <rect x="4" y="13" width="7" height="7" />
+      <rect x="13" y="13" width="7" height="7" />
+    </svg>
+  ),
+  marca: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
+      <path d="M12 3 21 8.5V15.5L12 21 3 15.5V8.5L12 3Z" />
+      <path d="M12 3V21M3 8.5 21 15.5M21 8.5 3 15.5" />
+    </svg>
+  ),
+};
+
 const SERVICES = [
   {
     tab: "Vídeo",
@@ -43,18 +65,25 @@ export default function Services({ onFilterTo }) {
           Vídeo, design ou marca: a solução dita o formato, não o contrário.
         </h2>
         <div className="solutions-list">
-          {SERVICES.map((s) => (
+          {SERVICES.map((s, i) => (
             <a
               key={s.filter}
-              className="solution-card reveal"
+              className={`solution-card solution-row reveal${i % 2 ? " reverse" : ""}`}
               href="#trabalhos"
               onClick={() => onFilterTo?.(s.filter)}
             >
-              <span className="solution-tab">{s.tab}</span>
-              <div className="solution-dots" aria-hidden="true"></div>
-              <h3>{s.title}</h3>
-              <p>{s.desc}</p>
-              <span className="solution-arrow">↗</span>
+              <div className="solution-visual">
+                <div className="solution-dots" aria-hidden="true"></div>
+                <span className="solution-icon">{ICONS[s.filter]}</span>
+              </div>
+              <div className="solution-copy">
+                <span className="solution-tab">{s.tab}</span>
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+                <span className="solution-arrow">
+                  Ver trabalhos <em>↗</em>
+                </span>
+              </div>
             </a>
           ))}
         </div>

@@ -3,6 +3,8 @@
 import { useRef } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import Intro from "@/components/Intro";
+import Stats from "@/components/Stats";
 import About from "@/components/About";
 import Services from "@/components/Services";
 import Process from "@/components/Process";
@@ -19,10 +21,12 @@ export default function Home() {
       <Header />
       <main id="top">
         <Hero />
-        <About />
+        <Intro />
+        <Stats />
         <Services onFilterTo={(f) => workRef.current?.setFilter(f)} />
         <Process />
         <Work ref={workRef} />
+        <About />
         <Faq />
         <ContactCta />
       </main>
