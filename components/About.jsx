@@ -34,8 +34,14 @@ export default function About() {
     const stVars = {
       trigger: aboutTextRef.current,
       start: "top 20%",
-      end: "+=" + Math.round(window.innerHeight * 1.4),
-      scrub: 0.4,
+      // Just enough scroll distance for the last word to finish its color
+      // reveal — the pin used to hold on for 1.4x the viewport height
+      // after the text had already fully revealed, which read as the
+      // page getting stuck. Releasing right as the reveal completes
+      // avoids that dead scroll.
+      end: "+=" + Math.round(window.innerHeight * 0.8),
+      scrub: 0.6,
+      anticipatePin: 1,
     };
     if (isDesktop && aboutVisualRef.current) {
       stVars.pin = aboutVisualRef.current;
