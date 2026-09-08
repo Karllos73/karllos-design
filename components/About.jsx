@@ -41,12 +41,16 @@ export default function About() {
       // avoids that dead scroll.
       end: "+=" + Math.round(window.innerHeight * 0.8),
       scrub: 0.6,
-      anticipatePin: 1,
     };
-    if (isDesktop && aboutVisualRef.current) {
-      stVars.pin = aboutVisualRef.current;
-      stVars.pinSpacing = true;
-    }
+    // Pinning the avatar column here used to work fine on its own, but
+    // once the Work section above gained its own (async, Supabase-data-
+    // driven) pinned depth gallery, this trigger's start/end kept getting
+    // computed against a stale pre-gallery layout — no amount of
+    // ScrollTrigger.refresh() timing (rAF, timeout, ResizeObserver) fixed
+    // it reliably, and a wrongly-pinned avatar bleeding through another
+    // section is worse than losing the pin effect. Word-color reveal
+    // below is unaffected — only the "avatar stays put while you read"
+    // pin is dropped.
 
     const tl = gsap.timeline({ scrollTrigger: stVars });
     paras.forEach((p, i) => {
