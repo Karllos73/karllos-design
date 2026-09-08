@@ -197,6 +197,7 @@ function DepthGallery({ projects }) {
       // user scrolls back above it, rather than showing/hiding instantly.
       onEnter: () => gsap.to(bg, { opacity: 0.28, duration: 1, ease: "sine.out" }),
       onLeaveBack: () => gsap.to(bg, { opacity: 0, duration: 0.6, ease: "sine.in" }),
+      onLeave: () => gsap.to(bg, { opacity: 0, duration: 0.6, ease: "sine.in" }),
       onUpdate: (self) => {
         const idx = Math.min(count - 1, Math.floor(self.progress * count));
         goTo(idx);
