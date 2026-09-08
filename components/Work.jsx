@@ -151,10 +151,15 @@ function DepthGallery({ projects }) {
     if (!section || !panels.length || !bar || !bg) return;
 
     const count = panels.length;
+    const baseColor = getComputedStyle(document.documentElement).getPropertyValue("--color-background").trim() || "#050507";
     gsap.set(panels, { autoAlpha: 0 });
     gsap.set(panels[0], { autoAlpha: 1 });
     gsap.set(bar, { xPercent: -140, skewX: -16 });
-    bg.style.backgroundColor = MOOD[projects[0].category]?.color || "#8B2CF5";
+    // Starts matching the page's own background (invisible against it) —
+    // the mood color only fades in once the user actually starts
+    // scrolling through this section, instead of appearing immediately
+    // and creating a hard seam against the section above.
+    gsap.set(bg, { backgroundColor: baseColor, opacity: 0 });
 
     function goTo(index) {
       if (index === activeRef.current || animatingRef.current) return;
@@ -170,15 +175,15 @@ function DepthGallery({ projects }) {
         },
       });
       tl.set(bar, { xPercent: -140, skewX: -16 })
-        .to(bar, { xPercent: 0, duration: 0.4 }, 0)
-        .to(bg, { backgroundColor: mood, duration: 0.7 }, 0)
+        .to(bar, { xPercent: 0, duration: 0.55 }, 0)
+        .to(bg, { backgroundColor: mood, duration: 1.1, ease: "sine.inOut" }, 0)
         .call(() => {
           gsap.set(from, { autoAlpha: 0 });
           gsap.set(to, { autoAlpha: 1 });
           activeRef.current = index;
           setActive(index);
         })
-        .to(bar, { xPercent: 140, duration: 0.4 });
+        .to(bar, { xPercent: 140, duration: 0.55 });
     }
 
     const trigger = ScrollTrigger.create({
@@ -187,6 +192,11 @@ function DepthGallery({ projects }) {
       end: "+=" + Math.round(window.innerHeight * 0.85 * count),
       pin: true,
       anticipatePin: 1,
+      // Fades the mood blob in only once the pin actually engages (i.e.
+      // scrolling has begun inside this section) and back out if the
+      // user scrolls back above it, rather than showing/hiding instantly.
+      onEnter: () => gsap.to(bg, { opacity: 0.28, duration: 1, ease: "sine.out" }),
+      onLeaveBack: () => gsap.to(bg, { opacity: 0, duration: 0.6, ease: "sine.in" }),
       onUpdate: (self) => {
         const idx = Math.min(count - 1, Math.floor(self.progress * count));
         goTo(idx);

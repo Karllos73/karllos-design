@@ -445,8 +445,8 @@ header.is-scrolled nav.navbar{
 /* ---------- work: depth-scrolling gallery (desktop + motion only) ---------- */
 .depth-gallery{position:relative; height:100vh; overflow:hidden;}
 .depth-bg{
-  position:absolute; inset:-15%; z-index:0; pointer-events:none; opacity:.28;
-  border-radius:50%; filter:blur(90px); background:var(--color-primary);
+  position:absolute; inset:-15%; z-index:0; pointer-events:none; opacity:0;
+  border-radius:50%; filter:blur(90px); background:var(--color-background);
 }
 .depth-stage{
   position:absolute; z-index:1; top:50%; left:58%; transform:translate(-50%,-50%);
